@@ -16,6 +16,10 @@ const getItemStyle = (isDragging, draggableStyle, isSelected) => ({
 const getListStyle = (isDraggingOver, bg) => ({
   background: bg ? bg : isDraggingOver ? "lightblue" : "lightgrey",
   padding: GRID,
+  width: 250,
+  maxWidth: 250,
+  margin: "15px 40px",
+  minHeight: "80px",
 });
 
 export function DropColumn({ item, index, onClick, items }) {
