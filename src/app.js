@@ -1,37 +1,10 @@
 import React, { useState, useCallback } from "react";
 import DragBody from "./components/draggable";
 import { initData } from "./data";
+import { multiReorder, reorder } from "./utils";
 
 export default function App() {
   const [items, setItems] = useState(initData);
-
-  const multiReorder = (destination) => {
-    const newItems = Object.keys(items).reduce((acc, key) => {
-      if (key === "selected") {
-        acc[key] = [];
-        return acc;
-      }
-      acc[key] = items[key].filter(
-        (item) => !items.selected.some((select) => select.id === item.id)
-      );
-      return acc;
-    }, {});
-    newItems[destination.droppableId].splice(
-      destination.index,
-      0,
-      ...items.selected
-    );
-    return newItems;
-  };
-
-  const reorder = (source, destination) => {
-    const _items = JSON.parse(JSON.stringify(items));
-    const [removed] = _items[source.droppableId].splice(source.index, 1);
-    removed.category = destination.droppableId;
-    _items[destination.droppableId].splice(destination.index, 0, removed);
-
-    return _items;
-  };
 
   const onDragEnd = useCallback(
     (result) => {
@@ -42,8 +15,8 @@ export default function App() {
       const { draggableId, destination, source } = result;
       setItems(
         items.selected.some((select) => select.id === draggableId)
-          ? multiReorder(destination)
-          : reorder(source, destination)
+          ? multiReorder(items, destination)
+          : reorder(items, source, destination)
       );
     },
     [items]
@@ -53,14 +26,13 @@ export default function App() {
     if (e.metaKey || e.ctrlKey) {
       setItems((prev) => ({
         ...prev,
-        selected: prev.selected.includes(item)
+        selected: prev.selected.some((pitem) => item.id === pitem.id)
           ? prev.selected.filter((select) => select.id !== item.id)
           : [...prev.selected, item],
       }));
       return;
     }
     if (e.shiftKey && items.selected.length >= 1) {
-      console.log(items.selected);
       return;
     }
     setItems((prev) => ({ ...prev, selected: [item] }));
