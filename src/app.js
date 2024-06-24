@@ -64,7 +64,10 @@ export default function App() {
       }));
       return;
     }
-    setItems((prev) => ({ ...prev, selected: [item] }));
+    if (items.selected.length >= 1) {
+      setItems((prev) => ({ ...prev, selected: [] }));
+      return;
+    }
   };
 
   return (

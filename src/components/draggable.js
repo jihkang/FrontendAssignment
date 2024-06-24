@@ -43,7 +43,7 @@ export function DropColumn({ item, index, onClick, items }) {
             style={getItemStyle(
               snapshot.isDragging,
               provided.draggableProps.style,
-              items.selected.includes(item)
+              items.selected.some((citem) => citem.id === item.id)
             )}
             onClick={(e) => {
               onClick(e, item);
@@ -58,7 +58,7 @@ export function DropColumn({ item, index, onClick, items }) {
   );
 }
 
-export function DragTitle({ column, onChangeTagName, length, children }) {
+export function DragTitle({ column, length, children }) {
   return (
     <div
       style={{
@@ -66,12 +66,7 @@ export function DragTitle({ column, onChangeTagName, length, children }) {
         flexDirection: "column",
       }}
     >
-      <span
-        onDoubleClick={() => {
-          const result = prompt("new column name");
-          onChangeTagName(result, column);
-        }}
-      >
+      <span>
         {column} {length}
       </span>
       {children}
@@ -85,13 +80,6 @@ export default function DragBody({ items, setItems, onDragEnd, onClick }) {
     color: undefined,
     category: "",
   });
-  const onChangeTagName = (data, prevTagName) => {
-    if (getObjectKeys(items, data)) {
-      const newItems = { ...items, [data]: items[prevTagName] };
-      delete newItems[prevTagName];
-      setItems(newItems);
-    }
-  };
 
   return (
     <DragDropContext
@@ -108,7 +96,6 @@ export default function DragBody({ items, setItems, onDragEnd, onClick }) {
         if (!destination?.droppableId) return;
         const startIndex = findCategoryIndex(items, source.droppableId);
         const endIndex = findCategoryIndex(items, destination.droppableId);
-        console.log(startIndex, endIndex, source, destination);
         if (!validChecker(source, destination, startIndex, endIndex)) {
           setBg({
             color: "red",
@@ -128,11 +115,7 @@ export default function DragBody({ items, setItems, onDragEnd, onClick }) {
         {Object.keys(items)
           .filter((key) => key !== "selected")
           .map((key) => (
-            <DragTitle
-              length={items[key].length}
-              column={key}
-              onChangeTagName={onChangeTagName}
-            >
+            <DragTitle length={items[key].length} column={key}>
               <Droppable droppableId={key} key={`droppabled_column_${key}`}>
                 {(provided, snapshot) => {
                   draged.current = { provided, snapshot, key };
