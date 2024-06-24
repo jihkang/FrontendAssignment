@@ -6,30 +6,17 @@ const GRID = 8;
 
 const getItemStyle = (isDragging, draggableStyle, isSelected) => ({
   userSelect: "none",
-  padding: GRID * 2,
+  padding: GRID,
   margin: `0 0 ${GRID}px 0`,
   background: isDragging ? "lightgreen" : isSelected ? "green" : "grey",
-  ...draggableStyle,
   borderRadius: 4,
+  ...draggableStyle,
 });
 
-const getListStyle = (isDraggingOver, bg) => {
-  const style = {
-    display: "flex",
-    flexDirection: "column",
-    gap: 8,
-    background: isDraggingOver ? "lightblue" : "lightgrey",
-    padding: GRID,
-    width: 250,
-    marginTop: 8,
-    marginBottom: -4,
-    minHeight: 32,
-  };
-  if (bg) {
-    style.background = bg;
-  }
-  return style;
-};
+const getListStyle = (isDraggingOver, bg) => ({
+  background: bg ? bg : isDraggingOver ? "lightblue" : "lightgrey",
+  padding: GRID,
+});
 
 export function DropColumn({ item, index, onClick, items }) {
   return (
@@ -128,18 +115,16 @@ export default function DragBody({ items, setItems, onDragEnd, onClick }) {
                         bg?.category === key ? bg.color : undefined
                       )}
                     >
-                      <>
-                        {provided.placeholder}
-                        {items[key].map((item, index) => (
-                          <DropColumn
-                            key={`Dropped_column_${item.id}_table`}
-                            item={item}
-                            items={items}
-                            index={index}
-                            onClick={onClick}
-                          />
-                        ))}
-                      </>
+                      {items[key].map((item, index) => (
+                        <DropColumn
+                          key={`Dropped_column_${item.id}_table`}
+                          item={item}
+                          items={items}
+                          index={index}
+                          onClick={onClick}
+                        />
+                      ))}
+                      {provided.placeholder}
                     </div>
                   );
                 }}
