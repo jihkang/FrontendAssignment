@@ -7,7 +7,6 @@ function App() {
     Array.from({ length: count }, (v, k) => k).map((k) => ({
       id: `item-${k}`,
       content: `item ${k}`,
-      selected: false,
     }));
 
   const [items, setItems] = useState({
@@ -15,7 +14,27 @@ function App() {
     column2: [],
     column3: [],
     column4: [],
+    selected: [],
   });
+
+  const multiReorder = (source, destination) => {
+    const newItems = Object.keys(items).reduce((acc, key) => {
+      if (key === "selected") {
+        acc[key] = [];
+        return acc;
+      }
+      acc[key] = items[key].filter(
+        (item) => !items.selected.some((select) => select.id === item.id)
+      );
+      return acc;
+    }, {});
+    newItems[destination.droppableId].splice(
+      destination.index,
+      0,
+      ...items.selected
+    );
+    return newItems;
+  };
 
   const reorder = (source, destination) => {
     const _items = JSON.parse(JSON.stringify(items));
@@ -29,47 +48,84 @@ function App() {
       if (!result.destination) {
         return;
       }
-      const { destination, source } = result;
-      setItems(reorder(source, destination));
+      const { draggableId, destination, source } = result;
+      setItems(
+        items.selected.some((select) => select.id === draggableId)
+          ? multiReorder(source, destination)
+          : reorder(source, destination)
+      );
     },
     [items]
   );
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
-        {Object.keys(items).map((key) => (
-          <Droppable droppableId={key} key={`droppabled_column_${key}`}>
-            {(provided, snapshot) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver)}
-              >
-                <span>{key}: column</span>
-                {items[key].map((item, index) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style
-                        )}
-                      >
-                        {item.content}
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-              </div>
-            )}
-          </Droppable>
-        ))}
+    <>
+      <div
+        style={{
+          height: "100px",
+        }}
+      >
+        <h2>
+          If you want to select multiple items, press the ctrl key and click
+          <br></br>
+          you use a mac, press the command key and click
+        </h2>
+        {items.selected.map((item) => item.content).join(", ")}
       </div>
-    </DragDropContext>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
+          {Object.keys(items)
+            .filter((key) => key !== "selected")
+            .map((key) => (
+              <Droppable droppableId={key} key={`droppabled_column_${key}`}>
+                {(provided, snapshot) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    style={getListStyle(snapshot.isDraggingOver)}
+                  >
+                    <div>
+                      <span>{key} </span>
+                    </div>
+                    {items[key].map((item, index) => (
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style,
+                              item.selected
+                            )}
+                            onClick={() => {
+                              setItems((prev) => ({
+                                ...prev,
+                                selected: prev.selected.includes(item)
+                                  ? prev.selected.filter(
+                                      (select) => select.id !== item.id
+                                    )
+                                  : [...prev.selected, item],
+                              }));
+                            }}
+                          >
+                            {item.content}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                  </div>
+                )}
+              </Droppable>
+            ))}
+        </div>
+      </DragDropContext>
+    </>
   );
 }
 
