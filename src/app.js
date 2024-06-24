@@ -13,11 +13,12 @@ export default function App() {
         return;
       }
       const { draggableId, destination, source } = result;
-      setItems(
-        items.selected.some((select) => select.id === draggableId)
-          ? multiReorder(items, destination)
-          : reorder(items, source, destination)
-      );
+      const newItems = items.selected.some(
+        (select) => select.id === draggableId
+      )
+        ? multiReorder(items, destination)
+        : reorder(items, source, destination);
+      setItems(newItems);
     },
     [items]
   );
@@ -39,19 +40,17 @@ export default function App() {
   };
 
   return (
-    <>
-      <div
-        style={{
-          height: "100px",
-        }}
-      >
-        <h2>
-          If you want to select multiple items, press the ctrl key and click
-          <br></br>
-          you use a mac, press the command key and click
-        </h2>
-        <DragBody onClick={onClick} onDragEnd={onDragEnd} items={items} />
-      </div>
-    </>
+    <div
+      style={{
+        height: "100px",
+      }}
+    >
+      <h2>
+        If you want to select multiple items, press the ctrl key and click
+        <br></br>
+        you use a mac, press the command key and click
+      </h2>
+      <DragBody onClick={onClick} onDragEnd={onDragEnd} items={items} />
+    </div>
   );
 }

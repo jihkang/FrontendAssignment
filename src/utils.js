@@ -6,10 +6,26 @@ export const getItems = (count) => {
   }));
 };
 
+/**
+ * 
+ * @param {*} items 
+ * @param {*} destination 
+ * @returns {
+ * column: [],
+ * ...
+ * column4: [],
+ * selected: [],
+ * }
+ * 
+ */
 export const multiReorder = (items, destination) => {
+  const selectedItems = items.selected.map((item) => ({
+    ...item,
+    category: destination.droppableId,
+  }));
   const newItems = Object.keys(items).reduce((acc, key) => {
     if (key === "selected") {
-      acc[key] = [];
+      acc[key] = items[key];
       return acc;
     }
     acc[key] = items[key].filter(
@@ -20,7 +36,7 @@ export const multiReorder = (items, destination) => {
   newItems[destination.droppableId].splice(
     destination.index,
     0,
-    ...items.selected
+    ...selectedItems
   );
   return newItems;
 };
@@ -30,6 +46,5 @@ export const reorder = (items, source, destination) => {
   const [removed] = _items[source.droppableId].splice(source.index, 1);
   removed.category = destination.droppableId;
   _items[destination.droppableId].splice(destination.index, 0, removed);
-
   return _items;
 };
