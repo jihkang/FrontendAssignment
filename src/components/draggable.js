@@ -22,6 +22,17 @@ const getListStyle = (isDraggingOver, bg) => ({
   minHeight: "80px",
 });
 
+const getDragStyle = (style) =>
+  style === "grid"
+    ? {
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+      }
+    : {
+        display: "flex",
+        flexDirection: "column",
+      };
+
 export function DropColumn({ item, index, onClick, items }) {
   return (
     <Draggable draggableId={item.id} index={index}>
@@ -51,12 +62,7 @@ export function DropColumn({ item, index, onClick, items }) {
 
 export function DragTitle({ column, length, children }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div style={getDragStyle("flex")}>
       <span>
         {column} {length}
       </span>
@@ -97,12 +103,7 @@ export default function DragBody({ items, setItems, onDragEnd, onClick }) {
         setBg(null);
       }}
     >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-        }}
-      >
+      <div style={getDragStyle("grid")}>
         {Object.keys(items)
           .filter((key) => key !== "selected")
           .map((key) => (

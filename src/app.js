@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import DragBody from "./components/draggable";
 import { initData } from "./data";
 import { multiReorder, reorder, createUniqueArr, multiSelect } from "./utils";
+import { Modal } from "./components/modal";
 
 export default function App() {
   const [items, setItems] = useState(initData);
@@ -50,10 +51,16 @@ export default function App() {
 
   return (
     <div>
-      <h2>
-        If you want to select multiple items, press the ctrl key and click you
-        use a mac, press the command key and click
-      </h2>
+      <Modal title="How to use">
+        <p>
+          If you want to select multiple items, press the ctrl key and click you
+          use a mac, press the command key and click
+          <br /> If you want to select multiple items, press the shift key and
+          click
+        </p>
+        <p>if you access 1st column to 3rd column cannot access directly</p>
+        <p>if you access even number to even number cannot access directly</p>
+      </Modal>
       <DragBody
         onClick={onClick}
         onDragEnd={onDragEnd}
