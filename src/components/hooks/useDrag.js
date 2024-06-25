@@ -28,14 +28,17 @@ export default function useDrag(initData) {
         return;
       }
       const { draggableId, destination, source } = result;
-      console.log(draggableId,  items.selected.some(
-        (select) => select.id === draggableId
-      ));
       const newItems = items.selected.some(
         (select) => select.id === draggableId
       )
-        ? multiReorder(items, destination)
-        : reorder(items, source, destination);
+      if (newItems && items.selected.length > 1) {
+        setItems(multiReorder(items, destination));
+        return ;
+      }
+      if (!newItems && items.selected.length > 1) {
+        setItems(reorder(Object.assign(items, {selected: []}), source, destination));
+        return ;
+      }
       setItems(newItems);
     },
     [items]
