@@ -14,7 +14,7 @@ export const findCategoryIndex = (obj, category) => {
   return Object.keys(obj).findIndex((key) => key === category);
 };
 
-export const order = (items, callback) => {
+export const itemOrder = (items) => {
   return Object.keys(items).reduce((acc, key) => {
     if (key === "selected") {
       acc[key] = [];
@@ -32,7 +32,7 @@ export const multiReorder = (items, destination) => {
     ...item,
     category: destination.droppableId,
   }));
-  const newItems = order(items, (obj, key) => obj[key]);
+  const newItems = itemOrder(items);
   newItems[destination.droppableId].splice(
     destination.index,
     0,
@@ -40,8 +40,9 @@ export const multiReorder = (items, destination) => {
   );
   return newItems;
 };
+
 export const reorder = (items, source, destination) => {
-  const newItems = order(items);
+  const newItems = itemOrder(items);
   const [removed] = newItems[source.droppableId].splice(source.index, 1);
   if (removed) {
     removed.category = destination.droppableId;
@@ -81,18 +82,19 @@ export const multiSelect = (items, item) => {
   if (selectItem.category !== item.category) {
     return [{ ...item }];
   }
-  let cnt = 0;
-  const [startIndex, endIndex] = items[item.category].reduce((acc, it) => {
-    if (it.id === item.id || it.id === selectItem.id) {
-      acc.push(cnt);
-    }
-    cnt++;
-    return acc;
-  }, []);
-
+  const startIndex = items[item.category].findIndex(
+    (cur) => cur.id === item.id
+  );
+  const endIndex = items[item.category].findIndex(
+    (cur) => cur.id === selectItem.id
+  );
   return items[item.category].filter((_, ind) =>
     startIndex < endIndex
       ? ind >= startIndex && ind <= endIndex
       : endIndex <= ind && ind <= startIndex
   );
+};
+
+export const filterObjectKeys = (obj, valid) => {
+  return Object.keys(obj).filter(valid);
 };

@@ -23,11 +23,14 @@ const getModalButton = (open) =>
         background: "transparent",
         pading: 8,
         outline: 0,
-        border: "none",
+        border: "1px solid",
+        diplay: "block",
       }
-    : {};
+    : {
+        border: "none",
+      };
 
-const getOpenModal = (open) => ({
+const getOpenModal = () => ({
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -41,18 +44,8 @@ const getOpenModal = (open) => ({
   zIndex: 1000,
 });
 
-export function Modal({ title, children }) {
+export function Modal({ children }) {
   const [open, setOpen] = React.useState(false);
-
-  React.useEffect(() => {
-    window.addEventListener("keydown", (e) => {
-      console.log(e.key);
-      e.key === "Escape" && setOpen(false);
-    });
-    return () => {
-      window.removeEventListener("keydown");
-    };
-  }, []);
 
   return (
     <>
@@ -62,20 +55,16 @@ export function Modal({ title, children }) {
         }}
         style={getModalButton()}
       >
-        {title}
+        ?
       </button>
-      <div style={getModalBody(open)}>
+      <div style={getModalBody(open)} className="modalBody">
         <div style={getOpenModal(open)}>
-          <button style={getModalButton(!open)} onClick={() => setOpen(false)}>
-            <svg width="40" height="40" viewbox="0 0 40 40">
-              <path
-                d="M 10,10 L 30,30 M 30,10 L 10,30"
-                stroke="black"
-                stroke-width="2"
-              />
-            </svg>
-          </button>
           {children}
+          <div onClck={(e) => e.preventDefault()}>
+            <button style={getModalButton(open)} onClick={() => setOpen(false)}>
+              닫기
+            </button>
+          </div>
         </div>
       </div>
     </>
