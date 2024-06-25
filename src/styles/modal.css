@@ -1,3 +1,17 @@
+
+.modal-title-list {
+    display: flex;
+    flex-direction:column;
+    justify-content: flex-start;
+    gap: 15px;
+    padding: 20px 8px;
+}
+
+.modal-title-list > h1 {
+    font-size: 32px;
+    font-weight: bold;
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -27,27 +41,25 @@
     margin: 15% auto;
     padding: 20px;
     width: 80%;
-    font-size: 22px;
-    font-weight: 200;
+    border-radius: 12px;
 }
 
 .modal-title {
-    font-size: 48px;
-}
-
-.modal-content>p {
-    text-wrap: wrap;
+    font-size: 20px;
+    font-weight: semi-bold;
 }
 
 .close {
-    padding: 0 10px;
+    padding: 3px 12px;
     box-shadow: 3px 2px 1px rgba(0, 0, 0, 0.2);
     background: none;
     width: fit-content;
     color: #aaa;
     float: right;
-    font-size: 28px;
+    font-size: 20px;
     font-weight: bold;
+    border-radius: 6px;
+    border: 1px solid black;
 }
 
 .close:hover,
@@ -60,4 +72,27 @@
 .footer {
     grid-area: "footer";
     height: "20px";
+}
+
+.readme {
+    display: flex;
+    flex-direction: column;
+    line-height: 33px;
+    gap: 5px;
+    padding: 20px 8px;
+}
+
+.readme > h3 {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.readme > p {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.readme > p > i {
+    font-style: italic;
 }

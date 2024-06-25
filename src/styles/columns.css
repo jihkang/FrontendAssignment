@@ -11,10 +11,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 220px;
+    min-width: 160px;
     height: 100%;
     padding: 0px;
-    background: rgba(0, 0, 0, 0.15);
+    background: rgb(245, 245, 245);
+    box-shadow: 3px 2px 1px rgba(0, 0, 0, 0.2);
+    border: 1px solid;
     border-radius: 8px;
     overflow: hidden;
 
@@ -29,7 +31,7 @@
     font-size: 16px;
     line-height: 46px;
     text-align: center;
-    font-weight: 300;
+    font-weight: 700;
 
 }
 
@@ -39,6 +41,7 @@
     padding-top: 10px;
     width: 100%;
     align-items: center;
+    border-radius: 8px;
 }
 
 .draged {
@@ -46,15 +49,21 @@
 }
 
 .item {
-    width: 90%;
+    user-select: "none";
+    width: 85%;
     background: white !important;
+    padding: 8;
+    margin: 0 0 8px 0;
+    border-radius: 4,
 }
 
 .invalid {
-    background: rgb(200, 23, 14) !important;
+    background: #ED553B !important;
 }
 
 .item:hover,
 .active {
-    background: #2383e247 !important;
+    /* background:  !important; */
+    border: 1px solid #000000;
+    box-shadow: 3px 2px 1px rgba(0, 0, 0, 0.2);
 }

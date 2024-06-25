@@ -45,6 +45,9 @@ export function DropColumn({ onClick, items, currentColumn }) {
                       ? "active"
                       : ""
                   }
+                  ${
+                    snapshot.isDragging ? "active": ""
+                  }
                 `}
                 onClick={(e) => {
                   onClick(e, item);
