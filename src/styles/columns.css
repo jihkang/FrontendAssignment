@@ -1,0 +1,30 @@
+.grid {
+    display: grid;
+    width: 100%;
+    margin: 20px 0;
+    height: 100%;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    margin: "10px auto";
+    height: 100%;
+}
+
+.item {
+    min-width: 20%;
+    background: rgba(15, 15, 15, 0.15);
+}
+
+.invalid {
+    background: rgb(200, 23, 14) !important;
+}
+
+.item:hover,
+.active {
+    background: #2383e247 !important;
+}

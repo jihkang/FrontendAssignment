@@ -60,7 +60,7 @@ export const getObjectKeys = (obj, key) => {
   return true;
 };
 
-export const validChecker = (source, destination, startIndex, endIndex) => {
+export const validDragUpdate = (source, destination, startIndex, endIndex) => {
   if (
     (startIndex == 0 && endIndex == 2) ||
     (source.index % 2 === 1 && destination?.index % 2 === 1)

@@ -1,25 +1,24 @@
-import React from "react";
+import React, { useState, useRef } from "react";
+import { initData } from "../data";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { filterObjectKeys, findCategoryIndex, validChecker } from "../utils";
+import { filterObjectKeys } from "../utils";
+import "../styles/columns.css";
+import useDrag from "./hooks/useDrag";
 
 const GRID = 8;
 
-const getItemStyle = (isDragging, draggableStyle, isSelected) => ({
+const getItemStyle = (isDragging, draggableStyle) => ({
   userSelect: "none",
   padding: GRID,
   margin: `0 0 ${GRID}px 0`,
-  background: isDragging ? "lightgreen" : isSelected ? "green" : "grey",
+  background: isDragging ? "lightgreen" : "grey",
   borderRadius: 4,
   ...draggableStyle,
 });
 
-const getListStyle = (isDraggingOver, bg) => ({
-  background: bg ? bg : isDraggingOver ? "lightblue" : "lightgrey",
+const getListStyle = (isDraggingOver, access) => ({
+  background: access ? access : isDraggingOver ? "lightblue" : "lightgrey",
   padding: GRID,
-  width: 250,
-  maxWidth: 250,
-  margin: "15px 40px",
-  minHeight: "80px",
 });
 
 const getDragStyle = (style) =>
@@ -34,8 +33,6 @@ const getDragStyle = (style) =>
       };
 
 export function DropColumn({ onClick, items, currentColumn }) {
-  console.log(currentColumn);
-  console.log(items[currentColumn]);
   return (
     <>
       {items[currentColumn].map((item, index) => (
@@ -52,9 +49,15 @@ export function DropColumn({ onClick, items, currentColumn }) {
                 {...provided.dragHandleProps}
                 style={getItemStyle(
                   snapshot.isDragging,
-                  provided.draggableProps.style,
-                  items.selected.some((citem) => citem.id === item.id)
+                  provided.draggableProps.style
                 )}
+                className={`item 
+                  ${
+                    items.selected.some((citem) => citem.id === item.id)
+                      ? "active"
+                      : ""
+                  }
+                    `}
                 onClick={(e) => {
                   onClick(e, item);
                 }}
@@ -82,22 +85,21 @@ export function DragTitle({ column, length, children }) {
 }
 
 export const DragForwardRef = React.forwardRef(
-  ({ provided, snapshot, currentColumn, bg, items, onClick }, ref) => {
+  ({ provided, snapshot, currentColumn, access, items, onClick }, ref) => {
     ref.current = { provided, snapshot, currentColumn };
     return (
       <div
         {...provided.droppableProps}
         ref={provided.innerRef}
-        style={getListStyle(
-          snapshot.isDraggingOver,
-          bg?.category === currentColumn ? bg.color : undefined
-        )}
+        style={getListStyle(snapshot.isDraggingOver)}
+        className={access === currentColumn ? "invalid" : ""}
       >
         <DropColumn
           key={`Dropped_column_${currentColumn}_table`}
           items={items}
           onClick={onClick}
           currentColumn={currentColumn}
+          access={access}
         />
         {provided.placeholder}
       </div>
@@ -105,46 +107,29 @@ export const DragForwardRef = React.forwardRef(
   }
 );
 
-export default function DragBody({
-  items,
-  onDragEnd: onDragEndParent,
-  onClick,
-}) {
-  const dragedRef = React.useRef();
-  const [bg, setBg] = React.useState({
-    color: undefined,
-    category: "",
-  });
+export default function DragBody() {
+  const dragedRef = useRef();
+  const [access, setAccess] = useState();
+  const [items, onDragEndSupport, onDragUpdateSupport, onClick] =
+    useDrag(initData);
 
   const filterItems = filterObjectKeys(items, (key) => key !== "selected");
-
-  const onDragEnd = (e) => {
-    if (bg?.color) {
+  const onDragEnd = (result) => {
+    if (access) {
       alert("이접근은 유효하지 않습니다!");
-      setBg(null);
+      setAccess(null);
       return;
     }
-    onDragEndParent(e);
+    onDragEndSupport(result);
   };
 
   const onDragUpdate = (e) => {
-    const { source, destination } = e;
-    if (!destination?.droppableId) return;
-    const startIndex = findCategoryIndex(items, source.droppableId);
-    const endIndex = findCategoryIndex(items, destination.droppableId);
-    if (!validChecker(source, destination, startIndex, endIndex)) {
-      setBg({
-        color: "red",
-        category: destination.droppableId,
-      });
-      return;
-    }
-    setBg(null);
+    onDragUpdateSupport(e, setAccess);
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
-      <div style={getDragStyle("grid")}>
+      <div className="grid">
         {filterItems.map((currentColumn) => (
           <DragTitle
             length={items[currentColumn].length}
@@ -161,7 +146,7 @@ export default function DragBody({
                   provided={provided}
                   snapshot={snapshot}
                   currentColumn={currentColumn}
-                  bg={bg}
+                  access={access}
                   items={items}
                   onClick={onClick}
                 />

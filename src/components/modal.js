@@ -60,7 +60,7 @@ export function Modal({ children }) {
       <div style={getModalBody(open)} className="modalBody">
         <div style={getOpenModal(open)}>
           {children}
-          <div onClck={(e) => e.preventDefault()}>
+          <div>
             <button style={getModalButton(open)} onClick={() => setOpen(false)}>
               닫기
             </button>
