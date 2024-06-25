@@ -28,18 +28,20 @@ export default function useDrag(initData) {
         return;
       }
       const { draggableId, destination, source } = result;
-      const newItems = items.selected.some(
+      const findItem = items.selected.some(
         (select) => select.id === draggableId
       )
-      if (newItems && items.selected.length > 1) {
+      if (findItem && items.selected.length > 1) {
         setItems(multiReorder(items, destination));
         return ;
       }
-      if (!newItems && items.selected.length > 1) {
+      if (!findItem && items.selected.length >= 1) {
         setItems(reorder(Object.assign(items, {selected: []}), source, destination));
         return ;
       }
-      setItems(newItems);
+      setItems(
+        reorder(items, source, destination)
+      );
     },
     [items]
   );

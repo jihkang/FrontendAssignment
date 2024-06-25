@@ -54,7 +54,9 @@ export function Modal({ children }) {
         }}
         className={!open? "close" : "none"}
       >
-        Read me
+        <h2 className="modal-title">
+          Read me
+        </h2>
       </button>
       <div className={!open? "modal" : "modal show"} >
         <div className="modal-content">

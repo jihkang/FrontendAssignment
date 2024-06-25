@@ -1,7 +1,7 @@
 .main {
     display: flex;
     width: 80%;
-    margin: 0 auto;
+    margin: 20px auto;
     flex-direction: column;
     justify-content: center;
 }
