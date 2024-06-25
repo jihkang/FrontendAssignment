@@ -18,7 +18,6 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
 const getListStyle = (isDraggingOver, access) => ({
   background: access ? access : isDraggingOver ? "lightblue" : "transparent",
-  padding: GRID,
 });
 
 export function DropColumn({ onClick, items, currentColumn }) {
@@ -87,7 +86,7 @@ export const DragForwardRef = React.forwardRef(
         ref={provided.innerRef}
         style={getListStyle(snapshot.isDraggingOver)}
         className={`${access === currentColumn ? "invalid" : ""} ${
-          snapshot.isDraggingOver ? "draged" : ""
+          snapshot.isDraggingOver ? "draged column-container" : "column-container"
         }`}
       >
         <DropColumn
