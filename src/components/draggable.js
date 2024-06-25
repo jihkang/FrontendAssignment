@@ -11,26 +11,15 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   userSelect: "none",
   padding: GRID,
   margin: `0 0 ${GRID}px 0`,
-  background: isDragging ? "lightgreen" : "grey",
+  background: isDragging ? "lightgreen" : "transparent",
   borderRadius: 4,
   ...draggableStyle,
 });
 
 const getListStyle = (isDraggingOver, access) => ({
-  background: access ? access : isDraggingOver ? "lightblue" : "lightgrey",
+  background: access ? access : isDraggingOver ? "lightblue" : "transparent",
   padding: GRID,
 });
-
-const getDragStyle = (style) =>
-  style === "grid"
-    ? {
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-      }
-    : {
-        display: "flex",
-        flexDirection: "column",
-      };
 
 export function DropColumn({ onClick, items, currentColumn }) {
   return (
@@ -57,7 +46,7 @@ export function DropColumn({ onClick, items, currentColumn }) {
                       ? "active"
                       : ""
                   }
-                    `}
+                `}
                 onClick={(e) => {
                   onClick(e, item);
                 }}
@@ -73,11 +62,16 @@ export function DropColumn({ onClick, items, currentColumn }) {
   );
 }
 
-export function DragTitle({ column, length, children }) {
+export function DragContainer({
+  currentColumn,
+  length,
+  children,
+  isDraggingOver,
+}) {
   return (
-    <div style={getDragStyle("flex")}>
+    <div className={`item-container ${isDraggingOver ? "draged" : ""}`}>
       <span>
-        {column} {length}
+        {currentColumn} {length}
       </span>
       {children}
     </div>
@@ -92,7 +86,9 @@ export const DragForwardRef = React.forwardRef(
         {...provided.droppableProps}
         ref={provided.innerRef}
         style={getListStyle(snapshot.isDraggingOver)}
-        className={access === currentColumn ? "invalid" : ""}
+        className={`${access === currentColumn ? "invalid" : ""} ${
+          snapshot.isDraggingOver ? "draged" : ""
+        }`}
       >
         <DropColumn
           key={`Dropped_column_${currentColumn}_table`}
@@ -131,9 +127,10 @@ export default function DragBody() {
     <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
       <div className="grid">
         {filterItems.map((currentColumn) => (
-          <DragTitle
+          <DragContainer
             length={items[currentColumn].length}
-            column={currentColumn}
+            currentColumn={currentColumn}
+            isDraggingOver={access === currentColumn}
             key={`dragged_columns_${currentColumn}_title`}
           >
             <Droppable
@@ -152,7 +149,7 @@ export default function DragBody() {
                 />
               )}
             </Droppable>
-          </DragTitle>
+          </DragContainer>
         ))}
       </div>
     </DragDropContext>

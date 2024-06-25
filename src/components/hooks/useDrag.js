@@ -28,6 +28,9 @@ export default function useDrag(initData) {
         return;
       }
       const { draggableId, destination, source } = result;
+      console.log(draggableId,  items.selected.some(
+        (select) => select.id === draggableId
+      ));
       const newItems = items.selected.some(
         (select) => select.id === draggableId
       )
@@ -65,10 +68,10 @@ export default function useDrag(initData) {
   const onDragUpdate = (e, callback) => {
     const { source, destination } = e;
     if (!destination?.droppableId) return;
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
     const startIndex = findCategoryIndex(items, source.droppableId);
     const endIndex = findCategoryIndex(items, destination.droppableId);
     if (!validDragUpdate(source, destination, startIndex, endIndex)) {
-      console.log(destination.droppabledId);
       callback(destination.droppableId);
       return;
     }

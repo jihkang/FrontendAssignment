@@ -1,5 +1,5 @@
 import React from "react";
-
+import "../styles/modal.css";
 const getModalBody = (open) =>
   open
     ? {
@@ -46,22 +46,21 @@ const getOpenModal = () => ({
 
 export function Modal({ children }) {
   const [open, setOpen] = React.useState(false);
-
   return (
     <>
       <button
         onClick={() => {
           setOpen(true);
         }}
-        style={getModalButton()}
+        className={!open? "close" : "none"}
       >
-        ?
+        Read me
       </button>
-      <div style={getModalBody(open)} className="modalBody">
-        <div style={getOpenModal(open)}>
+      <div className={!open? "modal" : "modal show"} >
+        <div className="modal-content">
           {children}
-          <div>
-            <button style={getModalButton(open)} onClick={() => setOpen(false)}>
+          <div className="footer">
+            <button className={open? "close" : "none"} onClick={() => setOpen(false)}>
               닫기
             </button>
           </div>

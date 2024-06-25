@@ -38,17 +38,27 @@ export const multiReorder = (items, destination) => {
     0,
     ...selectedItems
   );
+  console.log('multi order error');
+  console.log(newItems);
   return newItems;
 };
 
 export const reorder = (items, source, destination) => {
   const newItems = itemOrder(items);
+  console.log(newItems);
+  /**
+   * 
+   * when selected multi items other and another item draged in here 
+   * remove selected items error
+   */
   const [removed] = newItems[source.droppableId].splice(source.index, 1);
   if (removed) {
     removed.category = destination.droppableId;
     newItems[destination.droppableId].splice(destination.index, 0, removed);
     return newItems;
   }
+  console.log('reoreder error');
+  console.log(newItems);
   return items;
 };
 
