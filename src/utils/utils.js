@@ -38,27 +38,17 @@ export const multiReorder = (items, destination) => {
     0,
     ...selectedItems
   );
-  console.log('multi order error');
-  console.log(newItems);
   return newItems;
 };
 
 export const reorder = (items, source, destination) => {
   const newItems = itemOrder(items);
-  console.log(newItems);
-  /**
-   * 
-   * when selected multi items other and another item draged in here 
-   * remove selected items error
-   */
   const [removed] = newItems[source.droppableId].splice(source.index, 1);
   if (removed) {
     removed.category = destination.droppableId;
     newItems[destination.droppableId].splice(destination.index, 0, removed);
     return newItems;
   }
-  console.log('reoreder error');
-  console.log(newItems);
   return items;
 };
 
@@ -78,31 +68,6 @@ export const validDragUpdate = (source, destination, startIndex, endIndex) => {
     return false;
   }
   return true;
-};
-
-export const multiSelect = (items, item) => {
-  const { selected } = items;
-  if (selected.length < 1) {
-    return [{ ...item }];
-  }
-  if (!item.category) {
-    return selected;
-  }
-  const selectItem = selected[selected.length - 1];
-  if (selectItem.category !== item.category) {
-    return [{ ...item }];
-  }
-  const startIndex = items[item.category].findIndex(
-    (cur) => cur.id === item.id
-  );
-  const endIndex = items[item.category].findIndex(
-    (cur) => cur.id === selectItem.id
-  );
-  return items[item.category].filter((_, ind) =>
-    startIndex < endIndex
-      ? ind >= startIndex && ind <= endIndex
-      : endIndex <= ind && ind <= startIndex
-  );
 };
 
 export const filterObjectKeys = (obj, valid) => {

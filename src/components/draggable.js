@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
-import { initData } from "../data";
+import { initData } from "../constant/data";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { filterObjectKeys } from "../utils";
+import { filterObjectKeys } from "../utils/utils";
 import "../styles/columns.css";
 import useDrag from "./hooks/useDrag";
 

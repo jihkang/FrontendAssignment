@@ -1,4 +1,4 @@
-import { getItems } from "./utils";
+import { getItems } from "../utils/utils";
 
 export const initData = {
   column: getItems(10),

@@ -6,7 +6,7 @@ import {
   multiSelect,
   reorder,
   validDragUpdate,
-} from "../../utils";
+} from "../../utils/utils";
 
 /**
  *
@@ -54,14 +54,6 @@ export default function useDrag(initData) {
           ? items.selected.filter((select) => select.id !== item.id)
           : createUniqueArr([...prev.selected, item]),
       }));
-      return;
-    }
-    if (e.shiftKey) {
-      const newSelected = multiSelect(items, item);
-      setItems({
-        ...items,
-        selected: newSelected,
-      });
       return;
     }
     if (items.selected.length >= 1) {

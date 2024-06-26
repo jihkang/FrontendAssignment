@@ -1,6 +1,5 @@
 import React from "react";
 import DragBody from "./components/draggable";
-
 import { Modal } from "./components/modal";
 import "./styles/global.css";
 import "./styles/main.css";
@@ -16,8 +15,6 @@ export default function App() {
             <p>
               맥에서는 cmd키를 윈도우에서는 ctrl키를 누른 후 선택하면 여러개를
               선택할 수 있습니다.
-              <br/>
-              shift키를 누른후 선택하면 여러개를 한번에 선택할 수 있습니다.
             </p>
           <h3>
             제약사항
